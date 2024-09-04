@@ -1,9 +1,8 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
 import { MEALS, CATEGORIES } from "../data/dummy-data";
 import { useNavigation } from "@react-navigation/native";
 
-import MealItem from "../components/MealItem";
 import { useLayoutEffect } from "react";
+import MealList from "../components/MealList/MealList";
 
 // 每个Screen组件除了自动接收navigation prop之外，还可以自动接收route prop，route prop提供了当前路由的信息和参数
 // 和navigate一样，route也可以通过useRoute钩子来获得
@@ -33,31 +32,6 @@ export default function MealsOverviewScreen({ route }) {
     });
   }, [categoryId, navigation]);
 
-  const renderMealItem = (itemData) => {
-    function handlePress() {
-      navigation.navigate("MealDetail", { mealId: itemData.item.id });
-    }
-
-    return <MealItem meal={itemData.item} onPress={handlePress} />;
-  };
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={displayedMeals}
-        keyExtractor={displayedMeals.id}
-        renderItem={renderMealItem}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
-  );
+  return <MealList displayedMeals={displayedMeals} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});
 

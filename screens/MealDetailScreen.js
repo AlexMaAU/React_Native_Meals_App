@@ -8,8 +8,11 @@ import MealDetails from "../components/MealDetails";
 import Subtitle from "../components/MealDetail/Subtitle";
 import List from "../components/MealDetail/List";
 import IconButton from "../components/IconButton";
+import { useFavoritesContext } from "../store/context/favoritesContext";
 
 export default function MealDetailScreen() {
+  const { ids, addFavorite, removeFavorite } = useFavoritesContext();
+
   const route = useRoute();
   const mealId = route.params.mealId;
 
@@ -17,8 +20,10 @@ export default function MealDetailScreen() {
 
   const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
-  function headerButtonPressHandler() {
-    navigation.navigate("MealsCategory");
+  const mealIsFavorite = ids.includes(mealId);
+
+  function handleChangeFavorites(mealId) {
+    mealIsFavorite ? removeFavorite(mealId) : addFavorite(mealId);
   }
 
   useLayoutEffect(() => {
@@ -29,14 +34,14 @@ export default function MealDetailScreen() {
       headerRight: () => {
         return (
           <IconButton
-            icon="star"
+            icon={mealIsFavorite ? "star" : "star-outline"}
             color="white"
-            onPress={headerButtonPressHandler}
+            onPress={() => handleChangeFavorites(mealId)}
           />
         );
       },
     });
-  }, [navigation, headerButtonPressHandler]);
+  }, [navigation, handleChangeFavorites]);
 
   return (
     <ScrollView style={styles.rootContainer}>
